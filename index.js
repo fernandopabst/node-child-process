@@ -8,7 +8,7 @@ app.get("/pos", (req, res) => {
   const sentence = req.query.sentence;
   let dataToSend;
   // spawn new child process to call the python script
-  const python = spawn("python", [
+  const python = spawn("python3", [
     // change to python3 in DO
     "CyTag/CyTag.py",
     decodeURIComponent(sentence),
