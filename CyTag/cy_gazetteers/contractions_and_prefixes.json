@@ -1,0 +1,478 @@
+{
+  "f'": [
+    "contraction",
+    [
+      "fy"
+    ]
+  ],
+  "'swn": [
+    "contraction",
+    [
+      "baswn",
+      "faswn",
+      "taswn"
+    ]
+  ],
+  "'to": [
+    "contraction",
+    [
+      "eto"
+    ]
+  ],
+  "'sdim": [
+    "contraction",
+    [
+      "does_dim"
+    ]
+  ],
+  "e'llai": [
+    "contraction",
+    [
+      "efallai"
+    ]
+  ],
+  "gwna'": [
+    "contraction",
+    [
+      "gwnaf"
+    ]
+  ],
+  "fa'ma": [
+    "contraction",
+    [
+      "fan_yma"
+    ]
+  ],
+  "'sen": [
+    "contraction",
+    [
+      "basen",
+      "fasen",
+      "tasen"
+    ]
+  ],
+  "'i": [
+    "contraction",
+    [
+      "ei"
+    ]
+  ],
+  "t'mod": [
+    "contraction",
+    [
+      "ti'n_gwybod"
+    ]
+  ],
+  "d'": [
+    "contraction",
+    [
+      "dy"
+    ]
+  ],
+  "be'": [
+    "contraction",
+    [
+      "beth"
+    ]
+  ],
+  "'r": [
+    "contraction",
+    [
+      "y",
+      "yr"
+    ]
+  ],
+  "'m'bo'": [
+    "contraction",
+    [
+      "ddim_yn_gwybod"
+    ]
+  ],
+  "'u": [
+    "contraction",
+    [
+      "eu"
+    ]
+  ],
+  "'na": [
+    "contraction",
+    [
+      "yna",
+      "hynna",
+      "honna",
+      "hwnna",
+      "dyna"
+    ]
+  ],
+  "'sai": [
+    "contraction",
+    [
+      "basai",
+      "fasai",
+      "tasai"
+    ]
+  ],
+  "'th": [
+    "contraction",
+    [
+      "dy"
+    ]
+  ],
+  "'s'na'm": [
+    "contraction",
+    [
+      "does_na_ddim"
+
+    ]
+  ],
+  "'di": [
+    "contraction",
+    [
+      "wedi"
+    ]
+  ],
+  "'mlaen": [
+    "contraction",
+    [
+      "ymlaen"
+    ]
+  ],
+  "'Steddfod": [
+    "contraction",
+    [
+      "Eisteddfod"
+    ]
+  ],
+  "'Dolig": [
+    "contraction",
+    [
+      "Nadolig"
+    ]
+  ],
+  "'drycha": [
+    "contraction",
+    [
+      "edrycha"
+    ]
+  ],
+  "'panaid": [
+    "contraction",
+    [
+      "cwpanaid"
+    ]
+  ],
+  "'sgidiau": [
+    "contraction",
+    [
+      "esgidiau"
+    ]
+  ],
+  "'set": [
+    "contraction",
+    [
+      "baset",
+      "faset",
+      "taset"
+    ]
+  ],
+  "'ny": [
+    "contraction",
+    [
+      "hynny"
+    ]
+  ],
+  "'ch": [
+    "contraction",
+    [
+      "eich"
+    ]
+  ],
+  "'dy": [
+    "contraction",
+    [
+      "ydy"
+    ]
+  ],
+  "'w": [
+    "contraction",
+    [
+      "ei",
+      "eu"
+    ]
+  ],
+  "'fallai": [
+    "contraction",
+    [
+      "efallai"
+    ]
+  ],
+  "'fyd": [
+    "contraction",
+    [
+      "hefyd"
+    ]
+  ],
+  "'n": [
+    "contraction",
+    [
+      "yn",
+      "ein",
+      "fy"
+    ]
+  ],
+  "'sech": [
+    "contraction",
+    [
+      "basech",
+      "fasech",
+      "tasech"
+    ]
+  ],
+  "'ma": [
+    "contraction",
+    [
+      "yma",
+      "dyma"
+    ]
+  ],
+  "gynta'": [
+    "contraction",
+    [
+      "gyntaf"
+    ]
+  ],
+  "p'": [
+    "contraction",
+    [
+      "pa"
+    ]
+  ],
+  "'yn": [
+    "contraction",
+    [
+      "fy"
+    ]
+  ],
+  "o'dd": [
+    "contraction",
+    [
+      "oedd"
+    ]
+  ],
+  "'m": [
+    "contraction",
+    [
+      "fy",
+      "dim"
+    ]
+  ],
+  "fan'na": [
+    "contraction",
+    [
+      "fan_yna"
+    ]
+  ],
+  "sai'n": [
+    "contraction",
+    [
+      "sa_i'n"
+    ]
+  ],
+    "af-": [
+    "prefix",
+    []
+  ],
+  "traws-": [
+    "prefix",
+    []
+  ],
+  "all-": [
+    "prefix",
+    []
+  ],
+  "gor-": [
+    "prefix",
+    []
+  ],
+  "ôl-": [
+    "prefix",
+    []
+  ],
+  "neo-": [
+    "prefix",
+    []
+  ],
+  "tan-": [
+    "prefix",
+    []
+  ],
+  "gwrth-": [
+    "prefix",
+    []
+  ],
+  "ym-": [
+    "prefix",
+    []
+  ],
+  "go-": [
+    "prefix",
+    []
+  ],
+  "cyd-": [
+    "prefix",
+    []
+  ],
+  "e-": [
+    "prefix",
+    []
+  ],
+  "dis-": [
+    "prefix",
+    []
+  ],
+  "dad-": [
+    "prefix",
+    []
+  ],
+  "cyn-": [
+    "prefix",
+    []
+  ],
+  "an-": [
+    "prefix",
+    []
+  ],
+  "do-": [
+    "prefix",
+    []
+  ],
+  "di-": [
+    "prefix",
+    []
+  ],
+  "arch-": [
+    "prefix",
+    []
+  ],
+  "en-": [
+    "prefix",
+    []
+  ],
+  "ar-": [
+    "prefix",
+    []
+  ],
+  "dy-": [
+    "prefix",
+    []
+  ],
+  "dar-": [
+    "prefix",
+    []
+  ],
+  "poly-": [
+    "prefix",
+    []
+  ],
+  "llys-": [
+    "prefix",
+    []
+  ],
+  "ad-": [
+    "prefix",
+    []
+  ],
+  "mono-": [
+    "prefix",
+    []
+  ],
+  "rhyng-": [
+    "prefix",
+    []
+  ],
+  "can-": [
+    "prefix",
+    []
+  ],
+  "a-": [
+    "prefix",
+    []
+  ],
+  "tros-": [
+    "prefix",
+    []
+  ],
+  "tra-": [
+    "prefix",
+    []
+  ],
+  "add-": [
+    "prefix",
+    []
+  ],
+  "awto-": [
+    "prefix",
+    []
+  ],
+  "is-": [
+    "prefix",
+    []
+  ],
+  "traf-": [
+    "prefix",
+    []
+  ],
+  "cyf-": [
+    "prefix",
+    []
+  ],
+  "lled-": [
+    "prefix",
+    []
+  ],
+  "hy-": [
+    "prefix",
+    []
+  ],
+  "am-": [
+    "prefix",
+    []
+  ],
+  "rhag-": [
+    "prefix",
+    []
+  ],
+  "ech-": [
+    "prefix",
+    []
+  ],
+  "mewn-": [
+    "prefix",
+    []
+  ],
+  "proto-": [
+    "prefix",
+    []
+  ],
+  "cyfr-": [
+    "prefix",
+    []
+  ],
+  "rhy-": [
+    "prefix",
+    []
+  ],
+  "dir-": [
+    "prefix",
+    []
+  ],
+  "hunan-": [
+    "prefix",
+    []
+  ],
+  "anti-": [
+    "prefix",
+    []
+  ]
+
+}

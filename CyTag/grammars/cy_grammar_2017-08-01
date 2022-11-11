@@ -1,0 +1,625 @@
+#
+# 'cy_grammar_2017-08-01'
+#
+# Copyright 2016-2018
+# --- Kevin Donnelly <kevin@dotmon.com>
+# --- Steve Neale <steveneale3000@gmail.com, NealeS2@cardiff.ac.uk>
+#
+# This file is part of CyTag, a Welsh language part-of-speech (POS) 
+# tagger developed at Cardiff University as part of the CorCenCC 
+# project (cytag.corcencc.org, www.corcencc.org).
+#
+# This file is adapted from an equivalent grammar file in Autoglosser2,
+# also a POS tagger for Welsh (autoglosser.org.uk).
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License and the GNU
+# Affero General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# and the GNU Affero General Public License along with this program.
+# If not, see <http://www.gnu.org/licenses/>.
+
+#  General notes
+#  Combining or and not will not necessarily work: select (x) if (1 y) or (not 1 z) does not fire properly
+#  If the tag substitution for English uses dotted notation, none of the other rules will bite, because they are all using spaced notation.
+#  You can't combine conditions applying to adj -1 position OR adj 1 position.
+#  Substitute lines have to be in order of greatest number of tags in the match section, otherwise rules will fire on some tags, and change the tags so that the larger match never matches.  For instance: sv infin pv.
+
+DELIMITERS = "<~EOS~>" "<.>" "<!>" "<?>" "<…>" "<:>" "<;>";
+
+LIST initLV = ("a.*"ri) ("e.*"ri) ("i.*"ri) ("o.*"ri) ("u.*"ri) ("w.*"ri) ("ŵ.*"ri) ("y.*"ri) ("ŷ.*"ri);  # lemma begins with a vowel
+LIST initSV = ("<a.*>"ri) ("<e.*>"ri) ("<i.*>"ri) ("<o.*>"ri) ("<u.*>"ri) ("<w.*>"ri) ("<ŵ.*>"ri) ("<y.*>"ri) ("<ŷ.*>"ri);  # surface form begins with a vowel
+
+LIST noun = E;
+SET noun = (E);
+SET nounlike = (noun) | (B e) | (Rha);
+LIST verb = B;
+LIST infinitive = (B e);
+SET inflected = (B) - (e);  # ie the set of all verbs, minus the set of all infinitives; note that you cannot use LIST here
+SET non_imper = (B) - (gorch);
+LIST preposition = Ar;
+LIST determiner = Ban;
+SET preppron = (Ar) - (sym);
+LIST pronoun = (Rha);
+LIST adjective = Ans;
+LIST adverb = Adf;
+LIST conjunction = Cys;
+LIST concessive = "oh" "well" "wel";
+LIST interrogative = gof;
+
+LIST initvowel = "a.*"ri "e.*"ri "i.*"ri "o.*"ri "u.*"ri "w.*"ri "y.*"ri;
+LIST amvinf = (B e am);
+LIST smvinf = (B e sm);
+LIST amverb = (B am);
+LIST nmverb = (B nm);
+LIST smverb = (B sm);
+LIST SMVERB = (B sm);  # Note: set names are case-sensitive.
+LIST amnoun = (E am);
+LIST nmnoun = (E nm);
+LIST smnoun = (E sm);
+LIST possessive = ("ei" :her:) ("ei" :his:);
+LIST modal = "licio" "gobeithio" "gallu" "medru";
+LIST countable = "munud" "ceiniog";
+LIST quantifier = "ofnadwy" "andros" "tipyn" "lot";
+
+LIST initsm = ("b.*"ri) ("c.*"ri) ("d.*"ri) ("g.*"ri) ("ll.*"ri) ("m.*"ri) ("p.*"ri) ("rh.*"ri) ("t.*"ri);  # initial consonants that are soft mutateable
+LIST initsm = ("b.*"ri) ("c.*"ri) ("d.*"ri) ("g.*"ri) ("ll.*"ri) ("m.*"ri) ("p.*"ri) ("rh.*"ri) ("t.*"ri);  # initial consonants that are soft mutateable
+LIST initsm = ("b.*"ri) ("c.*"ri) ("d.*"ri) ("g.*"ri) ("ll.*"ri) ("m.*"ri) ("p.*"ri) ("rh.*"ri) ("t.*"ri);  # initial consonants that are soft mutateable
+
+
+LIST smtrigger = ("am" Ar) ("ar" Ar) ("at" Ar) ("dacw" Adf) ("dau" Rhi) ("dwy" Rhi fol) ("dy" Rha dib) ("dyma" Adv) ("dyna" Adv) ("ei" Rha dib g) ("fe" U cad) ("gan" Ar) ("go" Adf) ("heb" Ar) ("hyd" Ar) ("i" Ar) ("mi" U cad) ("neu" Cys) ("o" Ar) ("pa" Adf) ("pan" Cys) ("pur" Adf) ("rhy" Adf) ("rhyw" preq) ("tan" Ar) ("tros" Ar) ("trwy" Ar) ("wrth" Ar);
+LIST amtrigger = ("a" Cys) ("â" Ar) ("ei" Rha dib b) ("gyda" Ar) ("tua" Ar);
+LIST nmtrigger = ("fy" Rha dib) ("yn" Ar);
+
+LIST language = "Cymraeg" "Sbaeneg" "Sbanish" "Saesneg" "Ffrangeg" "Ffraneg" "Almaeneg";
+
+LIST welshmonth = "Ionawr" "Chwefror" "Mawrth" "Ebrill" "Mai" "Mehefin" "Gorffenaf" "Awst" "Medi" "Hydref" "Tachwedd" "Rhagfyr";
+
+#SET amvnoun = amvinf or amnoun;
+# note use of "or" (|) above; "and" (+) does not work because it yields all possible combinations of the elements in the two sets; since the n and vinf tags will never occur together, the set will never be valid; the following has the same effect:
+#LIST amvnoun = (vinf am) or (n am);
+
+LIST mutS = (sm);
+LIST mutN = (nm);  # Note: there have to be spaces on either side of the equals sign!!!
+LIST mutA = (am);
+
+SECTION
+SELECT ("<~EOS~>" Atd);
+
+# Global rules
+
+# 1- homonym selection - has the effect of "deleting" non-selected items from the dictionary
+SELECT ("bwrw" :strike:);
+SELECT ("codi" :lift:);
+SELECT ("eto" Adf);
+SELECT ("fel" :like:);
+SELECT ("gofyn" :ask:);
+SELECT ("rhywfaint" :amount:);
+SELECT ("tros" Ar :over:);
+SELECT ("ysgol" :schools:);
+SELECT ("ymlaen" :forward:);
+
+# 2 - removal of less common items
+REMOVE (B dibdyf);  # na ddefnyddio - CHECK: may be too broad
+REMOVE ("mod" :place:);
+REMOVE ("gwadu" :deny:); 
+REMOVE ("modd" :mode:);
+REMOVE ("mesur" Ar);
+REMOVE ("dirprwy" :proxy:);
+REMOVE ("hogi" :whet:);
+REMOVE ("siwd" :pseud:);
+
+# 3 - removal of impossible words
+REMOVE (Gw llyth ll);  # hi
+REMOVE ("awr" :hour: ll);  # awyr<awr
+REMOVE (invalid-pl);  # Remove plural forms if they are non-nouns that have been invalidly depluralised.
+
+# remove (ll) if (not 0 (E));  # NOT a good idea, probably!
+
+# 4 - removal of impossible mutations
+REMOVE ("<fe>"i "peth");
+REMOVE ("gan" Ar sm);  # yn<gyn
+REMOVE ("gan" preppron sm);  # sm forms are already listed separately; we need canddo for formal Welsh "a chanddo", though, so retain it in the dictionary
+REMOVE ("go" Adv sm);  # o<go
+REMOVE ("da" Ans nm);  # na<da
+REMOVE ("pe" Cys sm);  # be<pe
+REMOVE ("mo" Adv :not: sm);  # fo<mo
+REMOVE ("wedi" nm);  # ni<di
+REMOVE ("fi" U sm);
+
+# Mutation
+
+REMOVE (sm) if (-1 (YFB)) (0 (E g));
+REMOVE (am) if ( (not -1 ("â")) or (not -1 ("gyda")) or (not -1 ("ni")) );
+REMOVE (nm) if (0 (B));
+REMOVE (nm) if (not -1 nmtrigger);
+REMOVE (h) if ( (not -1 ("ei" :her:)) or (not -1 ("ein" :our:)) );
+
+SELECT (sm) if (-1 smtrigger);  # o /bethau/
+REMOVE (sm) if (not -1 smtrigger);  # NEEDS FIXING - not all smtriggers are currently listed in that set.
+REMOVE smtrigger if (1 initsm) (not 1 (sm));  # remove a soft mutation trigger word if the following word could have soft mutation, but doesn't
+
+SECTION
+
+## Homonyms
+SELECT ("y" YFB) if (-1 (E)) (1 (E));
+SELECT ("<lan>"i Adf) if (-1 ("dal" "tyfu" "byw"));
+SELECT ("<dal>"i B) if (1 ("lan"));
+SELECT ("hwn" Rha) if (-1* (E) BARRIER (Ban));
+SELECT ("hwnnw" Rha) if (-1 ("bod"));
+SELECT ("hwn" Ban) if (-1 ("un" "peth"));
+SELECT ("hwnnw" Ban) if (-1 ("un" "peth"));
+SELECT ("hon" Ban) if (-1 ("un" "peth"));
+SELECT ("honno" Ban) if (-1 ("un" "peth"));
+SELECT ("hyn" Ban) if (-1 ("rhai" "pethau"));
+SELECT ("hynny" Ban) if (-1 ("rhai" "pethau"));
+# MA
+LIST preMA = "wythnos" "blwyddyn" "mis";
+SELECT ("<ma>" Ban) (-1 (preMA) or (E));
+SELECT ("<ma>"i B) if (1 ("<'r>"));
+SELECT ("<ma>"i B) if (1 ("yna"));
+SELECT ("<ma>"i B) if (1 nounlike);
+SELECT ("<ma>" Adf) if (-1 (Be));
+SELECT ("<ma>" Adf) (-1 nounlike) (-2 (B));
+SELECT ("<ma>" B) (-1 nounlike) (-2 (B));
+SELECT ("<ma>" B) (-1 ("sut"));
+# MAI
+SELECT ("<mai>"i E) (-1 (Ar sym));
+SELECT ("<mai>"i Cys) (1 nounlike);
+SELECT ("<mai>"i Cys) (1* ("bod") BARRIER (B));
+SELECT ("<mai>"i E) (1 (YFB)) (2 (Rhi tref) or (Gw dig));
+SELECT ("<mai>"i E) (1 (Rhi tref) or (Gw dig));
+# NA
+SELECT ("<na>"i "dyna") if (1 ("<beth>"i));
+SELECT ("<na>"i Cys) if (*1 ("<chwaith>")) ;
+SELECT ("<na>"i :than:) if (-1 (Ans cym));
+SELECT ("<'na>" Adf) if (-1 ("mae"));
+# OES
+REMOVE ("<oes>" B) if (-1 ("ystod"));
+SELECT ("<oes>" B) if (-1 ("a"));
+SELECT ("<oes>" E) if (1 (YFB));  # /oes/ yr iâ
+SELECT ("<oes>" E) if (-1 ("ystod"));  # /o/ oes caethwasiaeth
+REMOVE ("bod" E) if (NOT 1 ("<dynol>"i));
+SELECT ("<bod>"i B) if (NOT 1 ("<dynol>"i));
+#'N
+REMOVE ("<'n>" "ein") if (-1 (Rha));
+REMOVE ("<'n>" "ein") if (1 (Ans));
+SELECT ("<'n>" U tra) if (1 (Ans));
+SELECT ("<'n>" U berf) if (1 (B e));
+SELECT ("<'n>" U berf) if (1 ("<.*an>"ri Gw est));
+SELECT ("<'n>" U berf) if (1 ("<.*o>"ri Gw est));
+SELECT ("<'n>" U tra) if (1 (Gw est));
+REMOVE ("<'n>" Ar) if (1 (Gw est));
+REMOVE ("<'n>" Ban) if (1 (Gw est));
+# DI
+REMOVE ("<di>"i "U berf");
+REMOVE ("<di>"i "U berf") if (NOT 1 (B e));
+SELECT ("<di>"i "ti") if (NOT 1 (B e));
+SELECT ("<di>"i "ti") if (1 ("<'n>"));
+SELECT ("<di>"i "ti") if (-2 ("dy"));
+# YN
+REMOVE ("<yn>" U tra) if (1 ("ystod") or ("lle"));
+REMOVE ("<yn>" U berf) if (1 ("ystod") or ("lle"));
+SELECT ("<yn>"i U berf) if (-1* ("bod")) (1 (B e));
+SELECT ("yn" U tra) (1 (Ans)) (-1* ("bod") BARRIER (B));
+SELECT ("yn" U berf) (1 (B e)) (-1* ("bod") BARRIER (B));
+SELECT ("yn" U berf) (1 (B e));
+
+# EI
+SELECT ("<ei>" b) if (-1* (E b) BARRIER (nounlike)) (NOT 1 (sm));
+SELECT ("<ei>" g) if (-1* (E g) BARRIER (nounlike)) (NOT 1 (am));
+REMOVE ("<ei>" :go:) if (1 (nounlike));
+# I
+REMOVE ("<i>"i Gw llyth);
+SELECT ("<i>"i Rha) (-1 (B 1 u));
+SELECT ("<i>"i Rha) (-1 (E)) (-2 ("<fy>"));
+SELECT ("<i>"i U) (1 (B e)) (NOT -1 ("gwneud") or ("darfod"));
+SELECT ("<i>"i Ar) if (1 (E));
+REMOVE ("<i>"i Rha) if (1 (Rha));
+# DIM
+SELECT ("dim"i E) if (1 ("ond"));
+SELECT ("dim"i Fan) if (1 ("byd"));
+# PETH
+SELECT ("<beth>"i Rha gof) (-1 ("dyna") or ("dyma"));
+REMOVE ("peth" Fan) (NOT 1 (E));
+# A
+SELECT ("a" U gof) if (1 ("<oes>"i) or ("<fydd>"i)) (-1 (<<<));
+SELECT ("a" U gof) if (-1 (<<<)) (*1 ("?"));
+REMOVE (! "a" U gof) if (-1 (<<<)) (1 ("<oes>"i) or ("<fydd>"i)) (*1 ("?"));
+SELECT ("â" Ar) (-1* ("mynd") or ("dod") BARRIER (B));
+SELECT ("<a>"i "mynd") if (1 ("<i>")) (2 (Ar));
+# DIM
+SELECT ("<dim>" Ban) if (1 (E)); 
+# GOFYN
+SELECT ("gofyn" E) if (-1 ("dim"));
+# SO
+SELECT ("so" Adf) if (1 (Atd));
+SELECT ("<So>" Adf) if (not 1 (Rha) or (E));
+REMOVE ("so" B) if (not 1 (Rha));
+SELECT ("so" Adf) if (1 (B));
+REMOVE ("so" Adf) if (2 ("yn") or ("wedi"));
+SELECT ("so" B 1 u) if (1 (Rha 1 u));
+SELECT ("so" B 2 u) if (1 (Rha 2 u));
+SELECT ("so" B 3 u) if (1 (Rha 3 u));
+SELECT ("so" B 1 u) if (1 (Rha 1 ll));
+SELECT ("so" B 2 u) if (1 (Rha 2 ll));
+SELECT ("so" B 3 u) if (1 (Rha 3 ll));
+# MAEN
+SELECT ("<maen>"i "bod") if (1 ("nhw"));
+# YM
+SELECT ("<ym>"i Ebych) if (not 1 ("<m.*>"ri));
+SELECT ("<ym>"i Ebych) if (not 1 (E));
+SELECT ("<ym>"i Ar) if (not 1 ("<m.*>"ri));
+# IAWN
+SELECT ("<Iawn>" Ebych) if (1 (Atd));
+SELECT ("iawn" Adf) if (-1 (Ans));
+SELECT ("iawn" Ans) if (-1 ("yn"));
+SELECT ("iawn" Ans) if (-1 ("<'n>"));
+SELECT ("iawn" E) if (-1 (YFB));
+# MI
+REMOVE ("mi" U) if (1 (B e));
+SELECT ("mi" U) if (1 (B));
+SELECT ("mi" U) if (1 (Atd)) (1 (B));
+REMOVE ("mi" U) if (NOT 1 (B));
+# FE
+SELECT ("fe" Rha) if (1 (B 2 u));
+SELECT ("fe" Rha) if (2 (B 2 u));
+SELECT ("fe" U) if (1 (B));
+SELECT ("fe" U) if (1 (Atd)) (2 (B));
+
+
+SECTION
+
+REMOVE (am) if (not -1 amtrigger);
+
+# Acronyms
+
+SELECT (Gw acr) if (0 ("<[A-Z].*>"ri));  # assume that anything in caps is an acronym, which is probably the reading to be chosen if one exists - needs checking
+
+# Names
+
+SELECT (E p) if (0 (cap)) (not -1 (<<<));  # choose name if the word is capitalised but is not sentence-initial (and of course the name needs to be in the dictionary) - needs checking
+REMOVE (E p) if (not 0 (cap));  # remove name if the word is not capitalised - i'r /gaer/
+
+# Particles
+
+SELECT ("a" U gof) if (1 inflected + mutS) (-1 (<<<));
+SELECT ("a" U gof) if (1 inflected + initSV) (-1 (<<<));
+SELECT ("a" Rha perth) if (1 inflected + mutS);
+SELECT ("a" Rha perth) if (1 ("<oedd>"));  # /a/ oedd  # Specific, but should catch quite a few.
+
+SELECT ("a" Cys) if (1 inflected + mutA);
+SELECT ("a" Cys) if (1 ("<'r>" YFB));  # adolygiadau /a'r/ adroddiadau
+SELECT ("a" Cys) if (1 (am));  # /a/ pha bryd
+SELECT ("a" Cys) if (-1 (E)) (1 (E));  # ysgolion /a/ sgiliau
+SELECT ("a" Cys) if (-1 (E p)) (1 (E p));  # Conwy /a/ Gwynedd
+SELECT ("a" Cys) if (not -1 (<<<));
+SELECT ("na" Cys :than:) if (1 (E am));  # fwy /na/ chanrif 
+
+SELECT ("yn" U berf) if (1 (B e));
+SELECT ("wedi" U berf) if (1 (B e));
+SELECT ("wedi" U berf) if (1 (Rha)) (2 (B e));
+SELECT ("yn" U tra) if (1 (E));
+SELECT ("yn" U tra) if (1 (Rha)) (2 (E));
+SELECT ("yn" Ar sym) if (not -1 (B)) (not -2 (B));
+
+SELECT ("yn" U tra) if (1 (Ans cym) or (Adv) or (quan sm) or ("gor" U));  # yn ddigon, yn or hapus
+SELECT ("yn" U tra) if (1C (Ans)); 
+SELECT ("yn" U tra) if (1 (E sm)) (not 1 language);
+SELECT ("yn" U tra) if (1 (Rhi tref sm));
+SELECT ("yn" U tra) if (-1 ("bod")) (1 (Rhi fol) or (Rhi fol d)) (2 (E));  # mae'/n/ bymtheg mis
+SELECT ("yn" U tra) if (-1 ("bod")) (1 (unspec));  # mae'/n/ full speed
+
+SELECT (YFB) if (not 1 inflected)(not 1 (Rha dib));  # maybe tighten this to specify all the POS that can occur, not the ones that can't?
+SELECT ("y" Rha perth) if (1 (B)) (1C (inflected));  # fel ag /yr/ wyt ti; sure /y/ byddai hi
+SELECT ("y" Rha perth) if (-1 ("pam"));  # pam /y/ gwladychwyd
+SELECT ("y" Rha perth) if (-1 ("fel")) (1 (Rha dib)) (2 (v 0));  # fel /y/'i gelwid
+SELECT ("a" Rha perth) if (1 (Rha dib)) (2 (B pres));  # /a/'i medd
+SELECT ("mor" :so:) if (not 2 ("â" Cys));
+
+SELECT (U cad) if (1 inflected);  # /fe/ sefydlodd
+SELECT (U cad) if (1 (Rha dib)) (2 (v 0));  # /fe/'i lleolir
+SELECT (U neg) if (1C inflected);  # /ni/ lwyddwyd
+
+REMOVE (U cad) if (-1 inflected);  # sgiwsiwch /fi/
+
+SELECT ("na" U neg) if (-1 (>>>)) (1 (comma));  # /Na/, 
+
+SELECT ("na" :than:) if (-1 (Ans cym));  # gwaeth na
+
+
+# Prepositions
+
+SELECT smtrigger if (1 (sm));
+SELECT ("yn" Ar) if (1 (YFB));  
+SELECT ("yn" Ar) if (1 (E p) or (Rhi) or (Gw dig) or ("man"));   # yn /Lloegr/, yn /615/, yn /fanno/
+SELECT ("yn" Ar) if (1 ("sir") or ("ardal")) (2 (E p));  # /yn/ Sir Drefaldwyn
+SELECT ("yn" Ar) if (1 (nm));  # yn /ne-orllewin/
+SELECT ("yn" Ar) if (-1 ("hyd")) (1 ("hwn"));  # hyd /yn/ hyn
+SELECT ("o" :of:) if (1 (YFB) or (Rha dib));  # /o'r/ môr, /o'n/ ffrindiau
+SELECT ("o" :of:) if (1 infinitive + (sm));
+SELECT ("o" :of:) if (not -1 (B)) (1 (E));  # llawer iawn o bobl
+SELECT ("o" :of:) if (-1 (Ans)) (-2 (E) or (Adf));  # peil go dda o
+SELECT ("o" :of:) if (1 (Gw sym));  # buddsoddiad o £3 miliwn
+SELECT ("o" :of:) if (-1 (E)) (-2 ("yn"));  # yn rhan o 
+SELECT ("o" :of:) if (1 (Gw sym));  # o /£/3.6m
+SELECT ("o" :of:) if (-1 ("gwared"));  # cael gwared /o/
+SELECT ("o" :of:) if (-1 ("nifer"));  # nifer /o/
+SELECT ("o" :of:) if (1 (E p));  # /o/ Sobibor
+SELECT ("i" Ar) if (-1 (B e)) (1 (B e));  # defnyddio /i/ sicrhau
+SELECT ("i" Ar) if (1 (YFB) or (Rha dib));  # /i'r/ dwyrain, /i'w/ disgrifio
+SELECT ("i" Ar) if (1 (E p));  # /i/ Iwerddon
+SELECT ("i" Ar) if (1 (Rha pers));  # /i/ mi
+SELECT ("<i>" Ar) if (1 (B e));  # /i/ cael
+SELECT ("â" Ar) if (1 (YFB) or (E) or (E p)) (not -1 (Ans cym));  # aeth taid /â'r/ ddwy ferch; ffinio /â/ Lloegr
+SELECT ("â" Ar) if (-1 ("peidio"));  # paid /â/ poeni
+SELECT ("cyn" Ar) if (not 1 (Ans cyf));  
+SELECT ("cyn" Adf) if (1 (Ans cyf));  # /cyn/ belled
+SELECT ("gan" Ar) if (not -1 smtrigger);  # gan Dean
+SELECT ("wedi" Ar) if (1 (B e));  # /wedi/ newid
+SELECT (Rha 1 u) if (-1 (preppron 1 u));  # amdana i
+SELECT ("am" Ar) if (not -1 (Rhi));
+SELECT ("am" Ar) if (not -1 (Gw dig));
+SELECT ("am" Ar) if (-2 (Gw sym)) (-1 (Rhi) or (Gw dig)); # £50 /am/ ... 
+SELECT ("am" Gw) if (-1 (Rhi) or (Gw dig)); # 2/am/
+
+# Pronouns
+SELECT (Rha 1 u) if (-1 (B 1 u)) (not -1 (B e));  # !allan i dawnsio
+SELECT ("ei" :his:) if (1 (sm));
+REMOVE ("mynd" B pres 2 u :go:) if (-1 (B e) or (Rha));  # colli /ei/ portmanteau
+SELECT ("fo" Rha) if (-1 (B e)) (1 (U)) (2 (Ans));  # i wneud /o/'n saff
+SELECT ("fo" Rha) if (-1 ("<ydy>"));  # ydy /o/
+SELECT ("ni" :we:) if (not 1 inflected);  # ie rule out particles
+SELECT ("ein" Rha dib) if (-1 ("gyda")) (1 (gilydd));  # gyda/'n/ gilydd
+SELECT ("ei" Rha dib g) if (1 (sm));   # if SM follows, choose "his"
+SELECT ("ei" Rha dib b) if (not 1 (sm));  # if no SM follows, choose "her" - these rules are imperfect, but acceptable fttb
+SELECT ("mi" Rha pers) if (-2 ("fy" Rha dib)) (-1 (E)) (1 ("yn" U));  # fy mod /i/'n 
+SELECT ("mi" Rha pers) if (-1 ("i" Ar));  # /i/ mi
+SELECT ("<i>" Ar) if (-1 ("<i>" Rha));
+SELECT (Rha perth) if (-1 (Cys)) (1 (B)); # Os /nad/ oeddech yn...  
+
+# Nouns
+
+REMOVE ("ôl" E) if (-1 ("ar"));  # ar /ôl/
+
+SELECT ("arfer" E) if (-1 ("fel" Cys));  # fel /arfer/
+SELECT ("diolch" E) if (-1 (Atd)) (1 (Atd));  # , /diolch/.
+SELECT ("diolch" E) if (1 ("yn")) (2 ("mawr"));  # /diolch/ yn fawr
+SELECT ("meddwl" E) if (-1 (Rha dib)) (1 (preppron));  # newid eich /feddwl/ amdano
+SELECT ("oes" E) if (-1 ("o" Ar));  # /o/ oes caethwasiaeth
+SELECT ("teledu" E) if (-1 ("cyfres"));  # cyfres /deledu/
+SELECT ("casgliad" E) if (1 ("o" Ar));  # /casgliad/ o
+SELECT ("diolch" E) if (1 ("i" Ar));  # /diolch/ i
+SELECT ("gwaith" :work:) if (1 (YFB));  # /Gwaith/ y Dyffryn
+
+SELECT (E) if (-1 ("y" YFB) or ("rhyw" preq));  # rhyw stori
+SELECT (E) if (-1 (B e));  # yn cyflwyno /cynigion/
+SELECT (E) if (-1 (Adf));  # /fesul/ cam
+SELECT (E) if (-1C inflected);  # gafodd /rhoddion/
+SELECT (E) if (-1C (Ar));  # mewn /ardal/
+SELECT (E) if (1 (E p));  # yn /ardal/ Penybont
+
+
+# Adjectives
+
+SELECT ("marw" Ans) if (-1 (E));  # llaw farw (dead hand)
+SELECT ("hen" Ans) if (1 smnoun);
+SELECT ("agos") if (-1 (E));  # y tro /nesa/
+SELECT (Ans) if (1 ("iawn" :very:));  # /da/ iawn
+SELECT (Ans) if (-1 (E p));  # Glyder /Fach/
+SELECT (Ans) if (-1 (quan));  # chydig /bach/
+SELECT (Ans) if (-1 (E));  # chydig /bach/
+
+
+# Adverbs
+
+SELECT ("iawn" :very:) if (-1 (Ans));  # hapus /iawn/
+SELECT ("iawn" :OK:) if (not -1 (Ans));  # /iawn/ ta
+SELECT ("pell" Adf) if (not 1 (Cys));  # ond /bellach/ nid yw...
+SELECT ("yna" :there:) if (-1 ("bod"));  # mae /na/ dipyn
+SELECT ("yna" :in:) if (1 ("mi"));
+REMOVE ("yna" :in:) if (not 1 ("mi"));
+SELECT ("dim" :not:) if (-1 ("bod"));  # does /dim/
+SELECT ("dim" :not:) if (-1 (Rha)) (-2 (B));  # dyn nhw /dim/
+SELECT ("dim" :not:) if (1 (E));  # /dim/ problem
+SELECT ("dim" :not:) if (1 (B e));  # /dim/ gwaethygu
+SELECT ("do" Adf) if (1 (<",">) or (<".">));  # /do, do/
+SELECT ("dyna" :that_is:) if (1 (quan) or (Ans) or (Rha));  # /na/ chydig iawn, /na/ ni
+SELECT ("yna" :there:) if (-2 (YFB)) (-1 (E) or (unspec)) (1 (Atd));  # y joint na?  # Needs more attention, especially as regards unspec ...
+SELECT ("allan" :out:) if (-1 ("ffordd"));  # y ffordd /allan/
+SELECT ("allan" :out:) if  (1 (Ar));  # ewch /allan/
+
+
+# Conjunctions
+
+SELECT ("er" Cys) if (1 ("i" preppron));  # /er/ iddynt
+SELECT ("â" Cys) if (-1 (Ans cyf));  # belled /â/
+SELECT ("a" Cys) if (-1 (E p) or (E cap)) (1 (E p) or (E cap));  # Môr Hafren /a/ Môr Iwerydd
+SELECT ("a" Cys) if (-1 (",")) (1 (B e));  # , /a/ cau
+SELECT ("a" Cys) if (not 1 (B));  # /a/ dy enw  -- perhaps too blunt?
+SELECT ("a" Cys) if (1 (B e));  # /a/ rhannu
+SELECT ("tra" Cys) if (not 1 (Ans));  # /tra/'n astudio
+SELECT ("taw" Cys) if (1 ("dyma"));  # /taw/ dyma
+
+
+# Interrogatives
+
+SELECT ("lle" gof) if (1 ("bod"));  # /lle/ mae
+
+
+# Verbs
+
+REMOVE (B gorch sm);  # yn mis May fydd yn dod
+
+SELECT (B 1 u) if (1 (Rha 1 u));  # /wna/ i
+SELECT (B 1 ll) if (1 (Rha 1 ll));  # /wnawn/ ni
+
+SELECT ("bod" dyf) if (not 1 ("yn" U));
+SELECT ("bod" B pres 3 amhen) if (not -1 ("am") or (YFB) or ("pys"));  # oes - check: may be too broad
+SELECT ("bod") if (0 ("<dyn>")) (1 (Rha));  # dyn /nhw/ ddim
+SELECT (B e) if (-1 ("yn" U berf));
+SELECT (B e) if (not 0 (sm)) (-1 (B e));  # penderfynu troi, !dawnsio gynnau
+SELECT (B e) if (-1 possessive);
+SELECT (B e) if (-1 preposition);
+SELECT (B e) if (-1* ("gwneud"));  # wnaeth nain Edwards briodi - CHECK this: it may be too broad
+SELECT (B e) if (-1 (E)) (1 (E));  # mesur /codi/ ffioedd
+SELECT (B e) if (-1 (<",">)) (1 (E p));  # , /briodi/ Helen
+SELECT (B e) if (-3 inflected) (-2 (Rha)) (-1 ("jyst"));  # fedrach chi jyst /edrych/?
+SELECT (B e) if (-1 (Rha)) (-2 ("i"));  # iddyn nhw /dechrau/
+
+SELECT ("gallu" B pres 3 u) if (1* (B e));  # /gall/ ... siarad  # Needs to be constrained to the same clause.
+
+# Tags
+
+REMOVE (tag) if (not 1 (>>>));  # !/does/ dim
+
+
+# Substitutions
+
+substitute (preq) (Rha) ("rhai" preq) if (not 1 (E));  # /rhei/ yna
+substitute (Rha dang) (pron.dem) (Rha dang) if (not -1 (E));  # gymaint o /hwnnw/
+
+
+# Lexical selection
+
+SELECT ("min" :edge:) if (-1 ("ar" Ar));  # ar /fin/  (Note that the colons are necessary if using the English tag.)
+SELECT ("pryd" :time:) if (-1 ("pa" :which:));  # pa /bryd/
+SELECT ("lled" :breadth:) if (-2 ("hyd" :length:));  # hyd a /lled/
+SELECT ("de" :south:) if (1 (E p));  # /de/ Cymru
+SELECT ("de" :south:) if (-1 (YFB)) (-2 ("yn" Ar));  # yn y /de/
+SELECT ("de" :right:) if (-1 ("ochr"));  # yr ocht /dde/
+SELECT ("gwledig" :lord:) if (-1 ("Macsen") or ("Cunedda") or ("Ceredig") or ("Pendefig"));  # Macsen /Wledig/
+SELECT ("<medd>" :possess:) if (not -1 (quote));  # medd (say) will only occur as a quotative
+
+
+# Syntax
+
+#select (B pres) if (-1* (B pres));  # ni /allwn/ (pres 1p or imperf 1s)
+#select (Rha dib :his:) if (0C (Rha dib g) or (Rha dib b));  # collapse ei-m and ei-f to ei-m
+
+
+# English
+
+# These two rules assume no single-word codeswitches, but since the number of en/cy ambiguous words is small, this should not be much of a problem in practice.
+#remove ([en]) if (not -1 ([en])) (not 1 ([en]));  # mae /hen/ chwedl
+REMOVE ([en]) if (0 ([cy]));  # Remove foreign readings if a Welsh one exists.  Replaces the above rule.  May be too broad.
+SELECT ([en]) if (-1 ([en])) (1 ([en])); 
+
+SELECT ([en]) if (-1 ("<">")) (1 ([en]));
+
+### New rules added by Steve Neale, Gareth Watkins
+
+REMOVE (Rha) IF (1 (YFB));
+SELECT ("iawn" :very:) if (-1 (Ans));
+SELECT (Ar) IF (1 (nm));
+
+SELECT ("yn" U tra) IF (-2 ("bod")) (-1 (E));
+
+SELECT ("ei" Rha dib 3 b u) IF (-3 (B)) (-2 (E p b)) (-1 (E));
+SELECT ("ei" Rha dib 3 b u) IF (-2 (B)) (-1 (E p b));
+SELECT ("ei" Rha dib 3 g u) IF (-3 (B)) (-2 (E p g)) (-1 (E));
+SELECT ("ei" Rha dib 3 g u) IF (-2 (B)) (-1 (E p g));
+
+#### Testing ###
+#
+#SECTION
+## Multiwords1 - Remove existing readings.
+## Note that surface forms (including mutation) should be used here, not lemmas.
+## We need regexes (ri) to cover the instance where the word appears as the first in a sentence.
+#
+#### Left side
+#remove unsafe ("<[Oo]>"ri) if (1 ("<hyd>") or ("<gwmpas>") or ("<gwbl>"));  # o hyd, o gwmpas, o gwbl
+#remove unsafe ("<[Aa]r>"ri) if (1 ("<ôl>") or ("<hyd>"));  # ar ôl, ar hyd
+#remove unsafe ("<[Yy]n>"ri) if (1 ("<ôl>") or ("<ystod>"));  # yn ôl, yn ystod
+#remove unsafe ("<[Tt]u>"ri) if (1 ("<ôl>"));  # tu ôl
+#remove unsafe ("<[Ee]r>"ri) if (1 ("<mwyn>"));  # er mwyn
+#remove unsafe ("<[Dd]im>"ri) if (1 ("<ond>"));  # dim ond
+#
+#
+#### Right side
+#remove unsafe ("<hyd>") if (-1 ("<[Oo]>"ri) or ("<[Aa]r>"ri));  # o hyd, ar hyd
+#remove unsafe ("<ôl>") if (-1 ("<[Aa]r>"ri) or ("<[Tt]u>"ri) or ("<[Yy]n>"ri));  # ar ôl, tu ôl, yn ôl
+#remove unsafe ("<ystod>") if (-1 ("<[Yy]n>"ri));  # yn ystod
+#remove unsafe ("<gwmpas>") if (-1 ("<[Oo]>"ri));  # o gwmpas
+#remove unsafe ("<gwbl>") if (-1 ("<[Oo]>"ri));  # o gwbl
+#remove unsafe ("<mwyn>") if (-1 ("<[Ee]r>"ri));  # er mwyn
+#remove unsafe ("<ond>") if (-1 ("<[Dd]im>"ri));  # dim ond
+#
+#
+## Small tweaks to improve Wenglish translation
+## If these rules are placed at their own section at the end, they add the tag additions in the following section #twice.
+#
+#substitute (:the:) (:of-the:) (:the:) if (-1 (n)) (1 (n));  # Make a genitive if "the" occurs between two nouns.
+#substitute (:her:) (:of-her:) (:her:) if (-1 (n)) (1 (n));  # Make a genitive if "her" occurs between two nouns.
+#substitute (:with:) (:as:) ("â" [cy] prep :with:) if (-1* ("ogystal") or (adj.eq));  # get /as/ after /ogystal/ #or /belled/
+#substitute (:thing:) (:some:) ("peth" [cy] n m sg :thing:) if (1 (n));  # /peth/ sinc
+#substitute (:\(as\) far:) (:far:) (adj.eq :\(as\) far:) if (-1 ("cyn" adv));
+#substitute (:class:) (:district:) ("dosbarth" [cy] n m sg :class:) if (-1 ("cyngor"));  # cyngor dosbarth
+#substitute (:by:) (:of:) (:by:) if (0 ("wrth" prep)) (1 ("cwrs"));  # /by/ course -> /of/ course
+#substitute (:turn:) (:time:) (:turn:) if (-1 (det.def)) (0 ("tro" n)) (1 (adj.dem));  # y /tro/ hwn
+#
+#substitute (:by:) (:as:) (:by:) if (0 ("wrth" prep)) (1 ("i" prep) or ("i" prep+pron));  # wrth iddi
+#substitute (:to_her:) (:she:) (:to_her:) if (-1 ("wrth" prep)) (0 ("i" prep+pron));  # wrth iddi
+#
+#substitute (:be:) (:which-be:) (:be:) if (0 (:be: pres.rel));  # sydd
+#substitute (:be:) (:is:) (:be:) if (0 (:be: 3s pres));  # mae
+#substitute (:be:) (:was:) (:be:) if (0 (:be: 3s past));  # bu
+#substitute (:be:) (:will:) (:be:) if (0 (:be: 3s fut));  # bydd
+#substitute (:be:) (:they-will:) (:be:) if (0 (:be: 3p fut));  # byddant
+#
+#
+#
+#SECTION
+## Multiwords2 - Recreate left and right sides.
+## Must use surface word notation on both sides here.
+## We need regexes (ri) to cover the instance where the word appears as the first in a sentence.
+#
+#add ({mw-ls}) ("<[Oo]>"ri) if (1 ("<hyd>"));  # o hyd
+#add ([cy] adv :still: <Adf> {mw-rs}) ("<hyd>") if (-1 ("<[Oo]>"ri));  # o hyd
+#
+#add ({mw-ls}) ("<[Aa]r>"ri) if (1 ("<hyd>"));  # ar hyd
+#add ([cy] prep :along: <Ar sym> {mw-rs}) ("<hyd>") if (-1 ("<[Aa]r>"ri));  # ar hyd
+#
+#add ({mw-ls}) ("<[Aa]r>"ri) if (1 ("<ôl>"));  # ar ôl
+#add ([cy] prep :after: <Ar sym> {mw-rs}) ("<ôl>")  if (-1 ("<[Aa]r>"ri));  # ar ôl
+#
+#add ({mw-ls}) ("<[Tt]u>"ri) if (1 ("<ôl>"));  # tu ôl
+#add ([cy] prep :behind: <Ar sym> {mw-rs}) ("<ôl>")  if (-1 ("<[Tt]u>"ri));  # tu ôl
+#
+#add ({mw-ls}) ("<[Yy]n>"ri) if (1 ("<ôl>"));  # yn ôl
+#add ([cy] adv :back: <Adf> {mw-rs}) ("<ôl>")  if (-1 ("<[Yy]n>"ri));  # yn ôl
+#
+#add ({mw-ls}) ("<[Yy]n>"ri) if (1 ("<ystod>"));  # yn ystod
+#add ([cy] prep :during: <Ar sym> {mw-rs}) ("<ystod>")  if (-1 ("<[Yy]n>"ri));  # yn ystod
+#
+#add ({mw-ls}) ("<[Oo]>"ri) if (1 ("<gwmpas>"));
+#add ([cy] adv :around: <Adf> \+ sm {mw-rs}) ("<gwmpas>") if (-1 ("<[Oo]>"ri));  # o gwmpas
+#
+#add ({mw-ls}) ("<[Oo]>"ri) if (1 ("<gwbl>"));
+#add ([cy] adv :at all: <Adf> \+ sm {mw-rs}) ("<gwbl>") if (-1 ("<[Oo]>"ri));  # o gwbl
+#
+#add ({mw-ls}) ("<[Ee]r>"ri) if (1 ("<mwyn>"));
+#add ([cy] prep :in order to: <Arcym> {mw-rs}) ("<mwyn>") if (-1 ("<[Ee]r>"ri));  # er mwyn
+#
+#add ({mw-ls}) ("<[Dd]im>"ri) if (1 ("<ond>"));
+#add ([cy] adv :only: <Adf> {mw-rs}) ("<ond>") if (-1 ("<[Dd]im>"ri));  # dim ond
+#
+## Alternative which means you don't have to strip RHS, but doesn't seem to work reliably - more testing needed.
+##substitute (n m sg :length: <E g u>) (adv :still: <Adf>) (n m sg :length: <E g u>) if (0 ("hyd")) (-1 (#mw-ls));;  # o hyd
+##substitute (adj :rear: <Ans cad u>) (adv :after: <Adf>) (adj :rear: <Ans cad u>) if (0 ("ôl")) (-1 (mw-ls));  # ar ôl
+
+SECTION
+# This final section simply selects the most likely tags for commonly ambiguous items, and is a last-ditch approach when iterations of the rules above have failed to disambiguate.
+SELECT ("so" Adf);
+SELECT (Ban) if (1 (E));
+SELECT (Rha) if (1 (Ar));
+SELECT (Rha) if (not 1 nounlike);
+SELECT (Ar sym);
