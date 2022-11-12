@@ -1,0 +1,7 @@
+make sure python3 is the command used
+pipe into docker with logging into DO console, command: docker exec -it <DOCKER ID> /bin/bash
+then apt-get update
+wget https://apertium.projectjj.com/apt/install-nightly.sh -O - | bash
+apt-get install cg3
+
+remember to use cors
